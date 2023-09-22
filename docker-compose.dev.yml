@@ -1,0 +1,59 @@
+version: "3.8"
+
+services:
+  app:
+    container_name: todo_app
+    build:
+      context: .
+      target: development
+    volumes:
+      - ./:/usr/src/app
+      - /usr/src/app/node_modules
+    restart: on-failure
+    env_file: ./.env
+    ports:
+      - $NODE_PORT:$NODE_PORT
+    environment:
+      - MYSQL_HOST=$MYSQL_HOST
+      - MYSQL_USER=$MYSQL_USER
+      - MYSQL_PASSWORD=$MYSQL_PASSWORD
+      - MYSQL_DATABASE=$MYSQL_DATABASE
+      - MYSQL_PORT=$MYSQL_PORT
+      - NODE_PORT=${NODE_PORT}
+    depends_on:
+      wait_for_db:
+        condition: service_completed_successfully
+    networks:
+      - todoappnetwork
+    command: npm run start:dev
+
+  mysqldb:
+    container_name: todo_mysql
+    image: mysql
+    volumes:
+      - db:/var/lib/mysql
+    restart: on-failure
+    env_file: ./.env
+    environment:
+      - MYSQL_USER=$MYSQL_USER
+      - MYSQL_PASSWORD=$MYSQL_PASSWORD
+      - MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD
+      - MYSQL_DATABASE=$MYSQL_DATABASE
+      - MYSQL_HOST=$MYSQL_HOST
+    networks:
+      - todoappnetwork
+
+  wait_for_db:
+    container_name: wait_for_db
+    image: atkrad/wait4x
+    depends_on:
+      - mysqldb
+    networks:
+      - todoappnetwork
+    command: tcp mysqldb:3306 -t 30s -i 250ms
+
+networks:
+  todoappnetwork:
+
+volumes:
+  db:
