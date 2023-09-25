@@ -23,7 +23,7 @@ describe("User REST API TEST", () => {
   test("Testing creation of user - validation", async () => {
     const createdUserResponse = await supertest(app)
       .post("/api/v1/user")
-      .send({ firstName: "", lastName: "test", userName: "" } as IUser);
+      .send({ firstName: "test", lastName: "test", userName: "test" } as IUser);
 
     expect(createdUserResponse.statusCode).toEqual(400);
   });
