@@ -21,13 +21,14 @@ const dbConfig = {
 } as IDatabaseConfig;
 
 let sequelize: any = null;
-logger.warn("Variables env not found ::: CONNECTING TO IN MEMORY DATABASE");
+
 if (
   !dbConfig.host ||
   !dbConfig.database ||
   !dbConfig.username ||
   !dbConfig.password
 ) {
+  logger.warn("Variables env not found ::: CONNECTING TO IN MEMORY DATABASE");
   sequelize = new Sequelize("sqlite::memory:", {
     logging: false,
     models: [models],
