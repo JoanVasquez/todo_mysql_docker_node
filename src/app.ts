@@ -1,4 +1,5 @@
 import "reflect-metadata";
+import * as dotenv from "dotenv";
 import express, { Application, NextFunction, Request, Response } from "express";
 import cors from "cors";
 import userRouter from "./routes/user.router";
@@ -6,6 +7,8 @@ import todoRouter from "./routes/todo.router";
 import ResponseTemplate from "./utils/response.template";
 import httpStatus from "./utils/http.status";
 import { errorHandler } from "./middlewares/exception.middleware";
+
+dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
 
 const app: Application = express();
 app.use(cors());
