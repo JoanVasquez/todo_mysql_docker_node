@@ -2,19 +2,16 @@ import app from "./app";
 import sequelize from "./config/database.config";
 import ip from "ip";
 import logger from "./utils/logger";
-import * as dotenv from "dotenv";
-
-dotenv.config();
 
 app.set("PORT", process.env.PORT || 5000);
 
+const { NODE_ENV } = process.env;
+
 async function start() {
-  console.log("test");
   sequelize
     .authenticate()
     .then(async () => {
       logger.info("CONNECTED TO DATABASE");
-
       try {
         await sequelize.sync({ force: true });
       } catch (error: any) {
@@ -22,7 +19,7 @@ async function start() {
       }
     })
     .catch((err: any) => {
-      logger.error(`DATABASE CONNECTION ERRO: ${err.message}`);
+      logger.error(`DATABASE CONNECTION ERROR: ${err.message}`);
     });
 }
 

@@ -1,23 +1,40 @@
 FROM node:alpine as development
 
 WORKDIR /usr/src/app
-COPY package*.json .
+COPY package.json .
 RUN npm install
 COPY ./ ./
 
-RUN npm run build
+CMD ["npm", "run", "start:dev"]
 
-FROM node:alpine as production
+# RUN npm run build
 
-ARG NODE_ENV=production
-ENV NODE_ENV=${NODE_ENV}
+# FROM node:alpine as staging
 
-WORKDIR /usr/src/app
 
-COPY package*.json .
+# ARG NODE_ENV=staging
+# ENV NODE_ENV=${NODE_ENV}
 
-RUN npm ci --only=production
+# WORKDIR /usr/src/app
 
-COPY --from=development /usr/src/app/dist ./dist
+# RUN npm ci --omit=dev
 
-CMD ["node", "dist/index.js"]
+# COPY --from=development /usr/src/app/dist ./dist
+
+# CMD ["node", "dist/index.js"]
+
+
+# FROM node:alpine as production
+
+# ARG NODE_ENV=production
+# ENV NODE_ENV=${NODE_ENV}
+
+# WORKDIR /usr/src/app
+
+# COPY package*.json .
+
+# RUN npm ci --omit=dev
+
+# COPY --from=development /usr/src/app/dist ./dist
+
+# CMD ["node", "dist/index.js"]

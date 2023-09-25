@@ -2,52 +2,18 @@ version: "3.8"
 
 services:
   app:
-    container_name: todo_app
+    container_name: todo_app_dev
     build:
       context: .
-      target: production
-    restart: always
-    env_file: ./.env
-    ports:
-      - $NODE_PORT:$NODE_PORT
-    depends_on:
-      wait_for_db:
-        condition: service_completed_successfully
-    networks:
-      - todoappnetwork
-    environment:
-      - MYSQL_HOST=$MYSQL_HOST
-      - MYSQL_USER=$MYSQL_USER
-      - MYSQL_PASSWORD=$MYSQL_PASSWORD
-      - MYSQL_DATABASE=$MYSQL_DATABASE
-      - NODE_PORT=${NODE_PORT}
-
-  mysqldb:
-    container_name: todo_mysql
-    image: mysql:5.7
-    restart: always
-    env_file: ./.env
-    environment:
-      - MYSQL_USER=$MYSQL_USER
-      - MYSQL_PASSWORD=$MYSQL_PASSWORD
-      - MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD
-      - MYSQL_DATABASE=$MYSQL_DATABASE
-    networks:
-      - todoappnetwork
+      target: development
     volumes:
-      - db:/var/lib/mysql
-
-  wait_for_db:
-    container_name: wait_for_db
-    image: atkrad/wait4x
-    depends_on:
-      - mysqldb
-    networks:
-      - todoappnetwork
-    command: tcp mysqldb:3306 -t 30s -i 250ms
-
-networks:
-  todoappnetwork:
-
-volumes:
-  db:
+      - ./:/usr/src/app
+    restart: unless-stopped
+    env_file: ./.env.development
+    ports:
+      - $NODE_PORT:5000
+    environment:
+      - MYSQL_HOST     = $MYSQL_DATABASE
+      - MYSQL_USER     = $MYSQL_USER
+      - MYSQL_PASSWORD = $MYSQL_PASSWORD
+      - MYSQL_DATABASE = $MYSQL_DATABASE

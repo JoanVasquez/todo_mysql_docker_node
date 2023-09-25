@@ -1,5 +1,6 @@
 import { Sequelize } from "sequelize-typescript";
 import path from "path";
+import logger from "../utils/logger";
 
 const models = path.join(__dirname, "../models");
 
@@ -19,18 +20,32 @@ const dbConfig = {
   //port: parseInt(process.env.MYSQL_PORT || "3306"),
 } as IDatabaseConfig;
 
-const sequelize = new Sequelize({
-  ...dbConfig,
-  dialect: "mysql",
-  logging: false,
-  models: [models],
-  pool: {
-    max: 10,
-    min: 0,
-    acquire: 12000,
-    idle: 1000,
-  },
-});
+let sequelize: any = null;
+logger.warn("Variables env not found ::: CONNECTING TO IN MEMORY DATABASE");
+if (
+  !dbConfig.host ||
+  !dbConfig.database ||
+  !dbConfig.username ||
+  !dbConfig.password
+) {
+  sequelize = new Sequelize("sqlite::memory:", {
+    logging: false,
+    models: [models],
+  });
+} else {
+  sequelize = new Sequelize({
+    ...dbConfig,
+    dialect: "mysql",
+    logging: false,
+    models: [models],
+    pool: {
+      max: 10,
+      min: 0,
+      acquire: 12000,
+      idle: 1000,
+    },
+  });
+}
 
 sequelize.addModels([models]);
 
