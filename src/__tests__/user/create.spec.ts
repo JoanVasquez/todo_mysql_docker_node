@@ -17,7 +17,7 @@ describe("User REST API TEST", () => {
     await createUse().expect(201);
     users = await User.findAll();
     expect(users.length).toEqual(1);
-    expect(users[0].firstName).toEqual("test two");
+    expect(users[0].firstName).toEqual("test");
   });
 
   test("Testing creation of user - validation", async () => {
