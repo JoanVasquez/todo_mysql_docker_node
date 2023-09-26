@@ -6,8 +6,8 @@
   "scripts": {
     "start:dev": "cross-env NODE_ENV=development ts-node-dev --poll --respawn --transpile-only src/index.ts",
     "build": "rimraf ./dist && tsc",
-    "start:staging": "npm run build && cross-env NODE_ENV=staging node dist/index.js",
-    "start": "npm run build && NODE_ENV=production node dist/index.js",
+    "start:staging": "NODE_ENV=staging node dist/index.js",
+    "start": "NODE_ENV=production node dist/index.js",
     "test": "jest --watch --runInBand --detectOpenHandles --colors a",
     "test:ci": "jest",
     "clear-jest": "jest --clearCache"
