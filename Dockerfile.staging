@@ -1,4 +1,4 @@
-FROM node:alpine as stagin
+FROM node:alpine as staging
 
 WORKDIR /usr/src/app
 COPY package*.json .
