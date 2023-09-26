@@ -1,0 +1,36 @@
+name: Deploy Node.js App to ECR - Staging
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  build:
+    name: Build Image
+    runs-on: ubuntu-latest
+    steps:
+      # Check the Dockerfile to build the docker image
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Programmatic authentication to aws
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: $
+          aws-secret-access-key: $
+          aws-region: $
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build, tag, and push image to Amazon ECR
+        env:
+          ECR_REGISTRY: $
+          ECR_REPOSITORY: todo_node
+          IMAGE_TAG: latest
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile.staging .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
