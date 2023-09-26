@@ -13,13 +13,13 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      # - name: Build Docker Image
-      #   run: docker build -t todoapp:1.0.0-staging -f Dockerfile.staging .
+      - name: Build Docker Image
+        run: docker build -t todoapp:1.0.0-staging -f Dockerfile.staging .
       # - name: Running TodoApp
       #   run: docker run --name mytodoapp -it --rm -e MYSQL_HOST=test -e MYSQL_DATABASE=test -e MYSQL_USER=test -e MYSQL_PASSWORD=test -p 5000:5000 todoapp:1.0.0-staging
     services:
       todoapp:
-        image: .
+        image: todoapp:1.0.0-staging
         env:
           MYSQL_HOST: ${{ secrets.DB_HOST }}
           MYSQL_DATABASE: todo_db
