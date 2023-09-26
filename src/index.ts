@@ -5,8 +5,6 @@ import logger from "./utils/logger";
 
 app.set("PORT", process.env.PORT || 5000);
 
-const { NODE_ENV } = process.env;
-
 async function start() {
   sequelize
     .authenticate()

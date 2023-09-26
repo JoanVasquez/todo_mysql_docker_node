@@ -28,6 +28,10 @@ if (
   !dbConfig.username ||
   !dbConfig.password
 ) {
+  if (process.env.NODE_ENV !== "development") {
+    logger.error("SET UP THE ENV VARIABLES FOR THE DATABASE CONNECTION!");
+    process.exit(1);
+  }
   logger.warn("Variables env not found ::: CONNECTING TO IN MEMORY DATABASE");
   sequelize = new Sequelize("sqlite::memory:", {
     logging: false,
