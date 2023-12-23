@@ -4,5 +4,6 @@ export default interface IService<T> {
   delete?(id: number): Promise<any>;
   findById?(id: number): Promise<T>;
   findAll?(): Promise<Array<T>>;
+  findAllPaginated?(limit: number, offset: number): Promise<any>;
   total?(): Promise<number>;
 }

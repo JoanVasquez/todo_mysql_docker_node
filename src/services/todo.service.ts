@@ -9,7 +9,7 @@ import BaseService from "./base.service";
 @injectable()
 export default class TodoService extends BaseService<Todo> {
   constructor(private todoRepository: TodoRepository) {
-    super(todoRepository);
+    super(todoRepository, "todo_redis");
     delete this.delete;
   }
 }

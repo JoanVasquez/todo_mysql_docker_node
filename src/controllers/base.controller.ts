@@ -88,6 +88,25 @@ export default abstract class BaseController {
         )
     );
 
+  findAllPaginated = (req: Request, res: Response) => {
+    const page = req.query.page as string;
+    const perPage = req.query.per_page as string;
+
+    this.baseService.findAllPaginated!(parseInt(page), parseInt(perPage)).then(
+      (entities) =>
+        res
+          .status(httpStatus.OK.code)
+          .send(
+            new ResponseTemplate(
+              httpStatus.OK.code,
+              httpStatus.OK.status,
+              "FOUND",
+              entities
+            )
+          )
+    );
+  };
+
   totalRecords? = (req: Request, res: Response) =>
     this.baseService.total!().then((records) =>
       res

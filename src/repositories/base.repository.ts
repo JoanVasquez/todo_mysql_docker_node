@@ -1,5 +1,6 @@
 import { Model, ModelCtor } from "sequelize-typescript";
 import { Includeable } from "sequelize";
+import { paginate, paginateProps } from "../utils/paginateArr";
 
 export default abstract class BaseRepository<T extends Model<T>> {
   constructor(
@@ -15,10 +16,12 @@ export default abstract class BaseRepository<T extends Model<T>> {
   };
 
   updateEntity = async (id: number, data: any): Promise<any> => {
-    return await this.model.update(data, {
+    await this.model.update(data, {
       returning: true,
       where: { id } as any,
     });
+
+    return await this.findEntityById(id);
   };
 
   deleteEntity = async (id: number): Promise<any> => {
@@ -28,6 +31,12 @@ export default abstract class BaseRepository<T extends Model<T>> {
 
   findAllEntity = async (): Promise<Array<any>> => {
     return await this.model.findAll({ include: this.includedEntities });
+  };
+
+  findAllPaginated = async (page: number, perPage: number): Promise<any> => {
+    const allEntities: Array<any> = await this.findAllEntity();
+    const paginated: paginateProps = paginate(allEntities, page, perPage);
+    return paginated;
   };
 
   findEntityById = async (id: number): Promise<any> => {
