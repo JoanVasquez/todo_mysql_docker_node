@@ -1,11 +1,9 @@
-import { container, injectable } from "tsyringe";
-import IService from "../interfaces/crud.interface";
+import { injectable, singleton } from "tsyringe";
 import Todo from "../models/Todo";
 import TodoRepository from "../repositories/todo.repository";
-import { throwError } from "../middlewares/exception.middleware";
-import httpStatus from "../utils/http.status";
 import BaseService from "./base.service";
 
+@singleton()
 @injectable()
 export default class TodoService extends BaseService<Todo> {
   constructor(private todoRepository: TodoRepository) {

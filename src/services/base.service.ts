@@ -58,7 +58,18 @@ export default abstract class BaseService<T> implements IService<T> {
     }
   }
   async findAllPaginated?(limit: number, offset: number) {
-    return await this.baseRepository.findAllPaginated(limit, offset);
+    const cachedData = await redisClient.get(`${this.redisKey}_paginated`);
+    if (cachedData) {
+      return JSON.parse(cachedData);
+    } else {
+      const data = await this.baseRepository.findAllPaginated(limit, offset);
+      await redisClient.setEx(
+        `${this.redisKey}_paginated`,
+        DEFAULT_EXPIRATION,
+        JSON.stringify(data)
+      );
+      return data;
+    }
   }
   async total?(): Promise<number> {
     return await await this.baseRepository.totalEntity();
